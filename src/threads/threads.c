@@ -1,5 +1,6 @@
 /*
 * Add NetID and names of all project partners
+* Name: Saleem Khan, NetID: sk2304
 *
 */
 #include <stdio.h>
@@ -12,52 +13,64 @@ int x = 0;
 int loop = 10000;
 
 /* Counter Incrementer function:
- * This is the function that each thread will run which
- * increments the shared counter x by LOOP times.
- *
- * Your job is to implement the incrementing of x
- * such that update to the counter is sychronized across threads.
- *
- */
+*  This is the function that each thread will run which
+*  increments the shared counter x by LOOP times.
+*
+*  Your job is to implement the incrementing of x
+*  such that update to the counter is sychronized across threads.
+*
+*/
 void *add_counter(void *arg) {
+	/* Add thread synchronizaiton logic in this function */	
+	pthread_mutex_lock(&mutex);
 
-    int i;
+	int i;
+	for(i = 0; i < loop; i++){
+		x = x + 1;
+	}
 
-    /* Add thread synchronizaiton logic in this function */	
-
-    for(i = 0; i < loop; i++){
-
-	x = x + 1;
-    }
-
-    return NULL;
+	pthread_mutex_unlock(&mutex);
+	return NULL;
 }
 
+void join_threads(){
+	pthread_join(t1, NULL);
+	pthread_join(t2, NULL);
+	pthread_join(t3, NULL);
+	pthread_join(t4, NULL);
+}
+
+void start_threads(){
+	pthread_create(&t1, NULL, add_counter, NULL);	
+	pthread_create(&t2, NULL, add_counter, NULL);	
+	pthread_create(&t3, NULL, add_counter, NULL);	
+	pthread_create(&t4, NULL, add_counter, NULL);	
+}
 
 /* Main function:
- * This is the main function that will run.
- *
- * Your job is to create four threads and have them
- * run the add_counter function().
- */
+*  This is the main function that will run.
+*
+*  Your job is to create four threads and have them
+*  run the add_counter function().
+*/
 int main(int argc, char *argv[]) {
 
-    if(argc != 2){
-        printf("Bad Usage: Must pass in a integer\n");
-        exit(1);
-    }
+	if(argc != 2){
+		printf("Bad Usage: Must pass in a integer\n");
+		exit(1);
+	}
 
-    loop = atoi(argv[1]);
+	loop = atoi(argv[1]);
+	printf("Going to run four threads to increment x up to %d\n", 4 * loop);
 
-    printf("Going to run four threads to increment x up to %d\n", 4 * loop);
+	/* Implement Code Here */
+	pthread_mutex_init(&mutex, NULL);
+	start_threads();
 
-    /* Implement Code Here */
+	/* Make sure to join the threads */
+	join_threads();
 
+	printf("The final value of x is %d\n", x);
 
-    /* Make sure to join the threads */
-
-
-    printf("The final value of x is %d\n", x);
-
-    return 0;
+	return 0;
 }
