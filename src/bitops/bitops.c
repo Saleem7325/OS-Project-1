@@ -17,7 +17,6 @@ static unsigned int myaddress = 4026544704;   // Binary  would be 11110000000000
  * Function 1: EXTRACTING OUTER (TOP-ORDER) BITS
  */
 static unsigned int get_top_bits(unsigned int value,  int num_bits){
-	//Implement your code here
 	int int_size = sizeof(unsigned int) * 8;
 	int shift = int_size - num_bits;
 
@@ -34,8 +33,13 @@ static unsigned int get_top_bits(unsigned int value,  int num_bits){
  * Function to set a bit at "index" bitmap
  */
 static void set_bit_at_index(char *bitmap, int index){
-	//Implement your code here	
-	bitmap | 1 << (index - 1);
+	int byte_index = index / 8; 
+	int bit_index = index % 8; 
+
+	char *byte = bitmap + byte_index; 
+	char mask = 1 << bit_index;
+
+	*byte = *byte | mask;	
 	return;
 }
 
@@ -46,8 +50,15 @@ static void set_bit_at_index(char *bitmap, int index){
  */
 static int get_bit_at_index(char *bitmap, int index){
 	//Get to the location in the character bitmap array
-	//Implement your code here
-	return (bitmap & (1 << (index - 1) ? 1 : 0)); 
+	int byte_index = index / 8; 
+	int bit_index = index % 8; 
+
+	char byte = bitmap[byte_index];	
+	if(byte & (1 << bit_index)){	
+		return 1; 
+	}else{
+		return 0;
+	}
 }
 
 
@@ -75,7 +86,14 @@ int main(){
 	* Let's try to read bit)
 	*/
 	printf("Function 3: The value at %dth location %d\n", 
-	    GET_BIT_INDEX, get_bit_at_index(bitmap, GET_BIT_INDEX));
+	   GET_BIT_INDEX, get_bit_at_index(bitmap, GET_BIT_INDEX));
+
+	/*
+	* For printing out the bits at each index
+	*/
+	// for(int i = 0; i < BITMAP_SIZE * 8; i++){
+		// printf("The value at %dth location %d\n", i, get_bit_at_index(bitmap, i));
+	// }
 	    
 	return 0;
 }
