@@ -1,6 +1,7 @@
 /*
 * Add NetID and names of all project partners
-* csp126 - Chirantan Patel, 
+* Name: Saleem Khan, NetID: sk2304
+* Name: Chirantan Patel, NetID: csp126
 */
 
 #include <signal.h>
